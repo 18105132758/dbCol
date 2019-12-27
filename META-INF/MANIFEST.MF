@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: DbCol
+Bundle-SymbolicName: dbCol;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: zyj
+Require-Bundle: org.eclipse.ui.intro,
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.apache.felix.scr,
+ org.eclipse.equinox.event
+Automatic-Module-Name: dbCol
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

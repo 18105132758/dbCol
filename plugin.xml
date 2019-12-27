@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="dbcol.app.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="dbcol.app.Perspective"
+            name="RCP Perspective"
+            id="dbCol.perspective">
+      </perspective>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            name="dbCol"
+            application="dbCol.application">
+         <property
+               name="windowImages"
+               value="icons/eclipse16.png,icons/eclipse32.png,icons/eclipse48.png,icons/eclipse64.png, icons/eclipse128.png,icons/eclipse256.png">
+         </property>
+         <property
+               name="appName"
+               value="dbCol">
+         </property>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro">
+      <intro
+            id="dbcol.app"
+            class="org.eclipse.ui.intro.config.CustomizableIntroPart">
+      </intro>
+      <introProductBinding
+            introId="dbcol.app"
+            productId="dbCol.product">
+      </introProductBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.config">
+      <config
+            id="dbCol.configId"
+            introId="dbcol.app"
+            content="introContent.xml">
+         <presentation
+               home-page-id="root">
+            <implementation
+                  os="win32,linux,macosx"
+                  kind="html">
+            </implementation>
+         </presentation>
+      </config>
+   </extension>
+
+</plugin>
