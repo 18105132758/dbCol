@@ -15,7 +15,9 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
     
     public void initialize(IWorkbenchConfigurer configurer) {
         super.initialize(configurer);
-        configurer.setSaveAndRestore(true);
+        //警用缓存
+        configurer.setSaveAndRestore(false);
+        System.out.println("警用缓存");
     }
 
 	public String getInitialWindowPerspectiveId() {

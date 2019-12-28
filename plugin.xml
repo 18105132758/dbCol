@@ -61,5 +61,26 @@
          </presentation>
       </config>
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="dbcol.app.ui.DbCollection"
+            id="dbcol.app.ui.dbCollection"
+            name="DbCollect"
+            restorable="true">
+      </view>
+      <view
+            class="dbcol.app.ui.TableList"
+            id="dbcol.app.ui.tableList"
+            name="TableList"
+            restorable="true">
+      </view>
+      <view
+            class="dbcol.app.ui.TableData"
+            id="dbcol.app.ui.tableData"
+            name="TableData"
+            restorable="true">
+      </view>
+   </extension>
 
 </plugin>
