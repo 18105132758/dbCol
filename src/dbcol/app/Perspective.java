@@ -11,9 +11,9 @@ public class Perspective implements IPerspectiveFactory {
 	public void createInitialLayout(IPageLayout layout) {
 		System.out.print("透视图布局..................");
 		
-		String editAreaId = layout.getEditorArea();
-		layout.setEditorAreaVisible(false);
-		layout.setFixed(true);
+		String editAreaId = layout.getEditorArea();	//获得编辑区id
+		layout.setEditorAreaVisible(false);		//隐藏编辑区
+		layout.setFixed(true);					//固定布局
 		
 		/**
 		 * 数据库编辑、表列表、表数据 视图排版

@@ -15,7 +15,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
     
     public void initialize(IWorkbenchConfigurer configurer) {
         super.initialize(configurer);
-        //警用缓存
+        //禁用缓存
         configurer.setSaveAndRestore(false);
         System.out.println("警用缓存");
     }

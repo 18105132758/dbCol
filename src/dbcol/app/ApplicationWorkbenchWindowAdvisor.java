@@ -18,9 +18,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     
     public void preWindowOpen() {
         IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
-        configurer.setInitialSize(new Point(700, 550));
-        configurer.setShowCoolBar(false);
-        configurer.setShowStatusLine(false);
-        configurer.setTitle("dbColApp");
+        configurer.setInitialSize(new Point(700, 550));	//设置窗口初始大小
+        configurer.setShowCoolBar(false);	//不显示工具栏
+        configurer.setShowStatusLine(false);	//不显示状态栏
+        configurer.setTitle("dbColApp");	//设置标题
     }
 }
