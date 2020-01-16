@@ -1,32 +1,84 @@
 package dbcol.app.ui;
 
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableLayout;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 
-public class TableList extends ViewPart {
-	private Text text;
+import dbcol.app.database.tableList.DataFactory;
+import dbcol.app.database.tableList.TableListActionGroup;
+import dbcol.app.database.tableList.TableListContentProvider;
+import dbcol.app.database.tableList.TableListLabelProvider;
 
+public class TableList extends ViewPart {
+	private Table table;
+	private TableViewer tableViewer;
+	
 	public TableList() {
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
-		parent.setLayout(new GridLayout(2, false));
+		parent.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Label lblTables = new Label(parent, SWT.NONE);
-		lblTables.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblTables.setText("表名");
-		
-		text = new Text(parent, SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		tableViewer = new TableViewer(parent, SWT.BORDER | 
+					SWT.CHECK |		//启用复选框
+					SWT.FULL_SELECTION |  	//全行选中
+//					SWT.MULTI | 	//多选
+					SWT.V_SCROLL | 	//垂直滚动条
+					SWT.H_SCROLL);	//水平滚动条
+		tableViewer.setUseHashlookup(true);		//提高SWT组件与数据元素的映射效率
+		table = tableViewer.getTable();
+		table.setHeaderVisible(true);	//显示表头
+		table.setLinesVisible(true);	//显示边框线
 //		setPartName("表列表视图");
+		
+		//设置布局管理器
+		TableLayout tableLayout = new TableLayout();	//专门用于表格的布局管理器
+		table.setLayout(tableLayout);
+//		table.setLayoutData(new GridData());
 
+		//创建列
+		TableColumn tableNameColumn = new TableColumn(table, SWT.NONE);
+		//设置列宽，2000像素，因为TableViewer右侧部分有空白列，影响视觉效果，所以最后一列设置的很宽，避免出现空白列，影响视觉效果
+		tableNameColumn.setWidth(200);	
+		tableNameColumn.setText("表名");
+		tableNameColumn.setResizable(false);  //禁止调整列宽
+		
+		//设置内容提供器
+		tableViewer.setContentProvider(new TableListContentProvider());
+		//设置标签提供器
+		tableViewer.setLabelProvider(new TableListLabelProvider());
+		
+		//设置表格数据
+		tableViewer.setInput(DataFactory.getTableList());
+		
+		
+		//选中第一条
+		table.setSelection(0);
+		table.setFocus();		//获取焦点
+		
+		//将TableViewer注册成事件源，因为后续需要处理选中事件
+		getViewSite().setSelectionProvider(tableViewer);
+		
+		//增加监听
+		addListeners();
+		
+		//设置右键菜单
+		TableListActionGroup actionGroup = new TableListActionGroup(tableViewer);
+		actionGroup.fillContextMenu(new MenuManager());
+		
 	}
 
 	@Override
@@ -35,4 +87,26 @@ public class TableList extends ViewPart {
 
 	}
 
+	/**
+	 * 增加表格事件处理
+	 */
+	private void addListeners() {
+		//双击事件监听
+		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				MessageDialog.openInformation(null, "提示", "double click");
+				System.out.println("double click.....");
+			}
+		});
+		//单击、复选框选中监听
+		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				System.out.println("click...........");
+			}
+		});
+	}
+	
 }
