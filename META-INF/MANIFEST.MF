@@ -8,6 +8,7 @@ Require-Bundle: org.eclipse.ui.intro,
  org.eclipse.core.runtime,
  org.eclipse.ui,
  org.apache.felix.scr,
- org.eclipse.equinox.event
+ org.eclipse.equinox.event,
+ org.junit
 Automatic-Module-Name: dbCol
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
