@@ -4,7 +4,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import dbcol.app.database.entity.Table;
+import dbcol.app.database.entity.DBTable;
 /**
  * 数据表 表格 标签提供器
  * @author zyj
@@ -45,7 +45,7 @@ public class TableListLabelProvider implements ITableLabelProvider{
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
 		//按序号获取对应列的内容,从好从0开始
-		Table table = (Table) element;
+		DBTable table = (DBTable) element;
 		System.out.println("label provider: " + element + "   "  + columnIndex);
 		if(columnIndex == 0) {
 			return table.getTableName();

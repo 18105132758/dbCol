@@ -9,7 +9,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.actions.ActionGroup;
 
-import dbcol.app.database.entity.Table;
+import dbcol.app.database.entity.DBTable;
 /**
  * 菜单组，主要作用就是在内部创建一组菜单项，并使用菜单管理器、菜单项创建菜单
  * @author zyj
@@ -78,7 +78,7 @@ public class TableListActionGroup extends ActionGroup{
 		public void run() {
 			super.run();
 			IStructuredSelection selection = tv.getStructuredSelection();
-			Table table = (Table) selection.getFirstElement();
+			DBTable table = (DBTable) selection.getFirstElement();
 			if(table == null) {
 				MessageDialog.openInformation(null, "提示", "选择记录");
 			}else {

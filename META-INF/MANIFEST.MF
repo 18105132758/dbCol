@@ -12,3 +12,6 @@ Require-Bundle: org.eclipse.ui.intro,
  org.junit
 Automatic-Module-Name: dbCol
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ClassPath: .,
+ lib/commons-lang3-3.9.jar,
+ lib/commons-collections4-4.4.jar
