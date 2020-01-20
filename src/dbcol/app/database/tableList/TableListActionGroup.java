@@ -58,7 +58,7 @@ public class TableListActionGroup extends ActionGroup{
 		public void run() {
 			super.run();
 			tv.refresh();
-			System.out.println("shuaixn.....");
+			System.out.println("刷新.....");
 		}
 		
 	}

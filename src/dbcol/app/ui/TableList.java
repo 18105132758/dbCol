@@ -1,11 +1,6 @@
 package dbcol.app.ui;
 
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -16,6 +11,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 
 import dbcol.app.database.tableList.DataFactory;
+import dbcol.app.database.tableList.TableDoubleClickListenser;
 import dbcol.app.database.tableList.TableListActionGroup;
 import dbcol.app.database.tableList.TableListContentProvider;
 import dbcol.app.database.tableList.TableListLabelProvider;
@@ -92,21 +88,10 @@ public class TableList extends ViewPart {
 	 */
 	private void addListeners() {
 		//双击事件监听
-		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
-			@Override
-			public void doubleClick(DoubleClickEvent event) {
-				MessageDialog.openInformation(null, "提示", "double click");
-				System.out.println("double click.....");
-			}
-		});
+		tableViewer.addDoubleClickListener(new TableDoubleClickListenser());
 		//单击、复选框选中监听
-		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				System.out.println("click...........");
-			}
-		});
+		tableViewer.addSelectionChangedListener(
+				(event)->System.out.println("click..........."));
 	}
 	
 }

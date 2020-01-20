@@ -3,15 +3,17 @@ package dbcol.app.database.showTableData;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
+import dbcol.app.AppContext;
 import dbcol.app.database.entity.DBTable;
+import dbcol.app.ui.consts.AppConsts;
 
 /**
  * 生成数据表
@@ -20,35 +22,48 @@ import dbcol.app.database.entity.DBTable;
  */
 public class DataTableFactory {
 	
-	public Composite createDataTableControl(DBTable dbTable, Composite parent) {
+	/**
+	 * 创建数据表对应的TableViewer控件
+	 * @param dbTable
+	 * @param parent
+	 * @return
+	 */
+	public static Composite createDataTableControl(DBTable dbTable, Composite parent) {
 		//因为parent这里
 		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new TableColumnLayout());
+		composite.setLayout(new FillLayout());
 		//创建tableViewer
 		TableViewer tableViewer = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION
 				| SWT.HORIZONTAL | SWT.V_SCROLL | SWT.H_SCROLL);
 		tableViewer.setUseHashlookup(true);
 		//获取table，并设置样式信息、布局管理器
 		Table table = tableViewer.getTable();
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		table.setLayout(new TableLayout());
+		tableConfig(table);
 		//创建列信息
 		createColumns(table, dbTable); 
 		//设置内容提供器、标签提供器
-		
+		tableViewer.setLabelProvider(new TDLabelProvider());
+		tableViewer.setContentProvider(new TDContentProvider());
 		//填充表格数据
-		
+		tableViewer.setInput(AppContext.getQuery().queryData(dbTable));
 		//获取焦点
-		
-		//注册事件源
-		
-		
+		table.setFocus();
+		//注册为选中事件源
+		AppContext.getView(AppConsts.TABLE_DATA_UI).getViewSite().setSelectionProvider(tableViewer);
 		//增加事件处理
-		
-		
+			/*暂时不需要事件处理*/
 		return composite;
 		
+	}
+
+	/**
+	 * 配置Table控件
+	 * @param table
+	 */
+	private static void tableConfig(Table table) {
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		table.setLayout(new TableLayout());
 	}
 	
 	
@@ -57,7 +72,7 @@ public class DataTableFactory {
 	 * @param table
 	 * @param dbTable
 	 */
-	private void createColumns(Table table, DBTable dbTable) {
+	private static void createColumns(Table table, DBTable dbTable) {
 		List<String> columns = dbTable.getColumnNames();
 		if (CollectionUtils.isEmpty(columns)) {
 			return;

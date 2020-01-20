@@ -1,16 +1,12 @@
-package dbcol.app.database.tableList;
+package dbcol.app.database.showTableData;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import dbcol.app.database.entity.DBTable;
-/**
- * 数据表 表格 标签提供器
- * @author zyj
- *
- */
-public class TableListLabelProvider implements ITableLabelProvider{
+import dbcol.app.database.entity.OneLineData;
+
+public class TDLabelProvider implements ITableLabelProvider{
 
 	@Override
 	public void addListener(ILabelProviderListener listener) {
@@ -41,15 +37,17 @@ public class TableListLabelProvider implements ITableLabelProvider{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		//按序号获取对应列的内容,从好从0开始
-		DBTable table = (DBTable) element;
-		if(columnIndex == 0) {
-			return table.getTableName();
+		if(element instanceof OneLineData) {
+			Object column = ((OneLineData)element).getColumnData(columnIndex);
+			if(column != null) {
+				return column.toString();
+			}
 		}
-		return "";
+		return null;
 	}
+
 
 }
