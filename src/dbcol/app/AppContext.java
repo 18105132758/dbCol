@@ -1,7 +1,7 @@
 package dbcol.app;
 /**
  * 系统上下文，缓存系统中需要使用的类
- * @author zyjliubaohua
+ * @author zyj
  *
  */
 
