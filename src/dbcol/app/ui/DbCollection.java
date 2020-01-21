@@ -2,17 +2,15 @@ package dbcol.app.ui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.part.ViewPart;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.part.ViewPart;
 
 public class DbCollection extends ViewPart {
 	private Text dbURLText;
@@ -25,38 +23,51 @@ public class DbCollection extends ViewPart {
 	@Override
 	public void createPartControl(Composite parent) {
 		Composite container = new  Composite(parent, SWT.BORDER_DOT);
-		container.setLayout(new FillLayout());
-		Group gp = new Group(container, SWT.BORDER);
-		gp.setLayout(new GridLayout(6, false));
+		container.setLayout(new GridLayout(1, true));
 		
-		Label savedDBLabel = new Label(gp, SWT.NONE);
-		savedDBLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		savedDBLabel.setText("已有数据源");
+		Group collGroup = new Group(container, SWT.BORDER);
+		collGroup.setLayout(new GridLayout(6, false));
+		Label savedDBLabel = new Label(collGroup, SWT.NONE);
+		savedDBLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 2, 1));
+		savedDBLabel.setText("已有数据源：");
 		
-		CCombo savedDbLink = new CCombo(gp, SWT.BORDER);
-		savedDbLink.setItems(new String[] {"db1", "db2", "db3", "db4"});
-		new Label(gp, SWT.NONE);
+		CCombo savedDbLink = new CCombo(collGroup, SWT.BORDER);
+		savedDbLink.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+		savedDbLink.setItems(new String[] {"db1--", "db2", "db3", "db4"});
+		savedDbLink.setSize(1000, 20);
 		
-		Button connBtn = new Button(gp, SWT.NONE);
+		Button connBtn = new Button(collGroup, SWT.NONE);
 		connBtn.setText("连接");
-		new Label(gp, SWT.NONE);
-		new Label(gp, SWT.NONE);
+		connBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		
-		Label dbTypeLabel = new Label(gp, SWT.NONE);
+		Button expBtn = new Button(collGroup, SWT.NONE);
+		expBtn.setText("导出");
+		expBtn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		
+		//数据源配置分组
+		Group dsCfgGroup = new Group(container, SWT.BORDER);
+		dsCfgGroup.setLayout(new GridLayout(6, false));
+		
+		Label dbTypeLabel = new Label(dsCfgGroup, SWT.NONE);
 		dbTypeLabel.setText("数据库类型：");
+		dbTypeLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
-		CCombo dbType = new CCombo(gp, SWT.BORDER);
+		CCombo dbType = new CCombo(dsCfgGroup, SWT.BORDER);
 		dbType.setItems(new String[] {"oracle", "mysql", "sqlserver"});
-		new Label(gp, SWT.NONE);
+		dbType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
-		CLabel dbURLLabel = new CLabel(gp, SWT.NONE);
-		dbURLLabel.setText("URL");
+		CLabel dbURLLabel = new CLabel(dbType, SWT.NONE);
+		dbURLLabel.setText("URL:");
+		dbURLLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		
-		dbURLText = new Text(gp, SWT.BORDER);
-		dbURLText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		dbURLText = new Text(dsCfgGroup, SWT.BORDER);
+		dbURLText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		Button connTestBtn = new Button(gp, SWT.NONE);
+		Button connTestBtn = new Button(dsCfgGroup, SWT.NONE);
 		connTestBtn.setText("测试连接");
+		
+//		Group collGroup = new Group(gp, SWT.BORDER);
+//		collGroup.setLayout(new GridLayout(6, false));
 		
 //		setPartName("数据库连接配置视图");
 	}
