@@ -19,9 +19,15 @@ public class TableDoubleClickListenser implements IDoubleClickListener{
 	public void doubleClick(DoubleClickEvent event) {
 		//获取选中的数据对象
 		DBTable dbTable = (DBTable) ((IStructuredSelection)event.getSelection()).getFirstElement();
-		//获取视图ViewPart
+		//获取视图ViewPart：二维表数据视图
 		TableData tableDataView = (TableData)AppContext.getView(AppConsts.TABLE_DATA_UI);
-		//获取标签容器
+		boolean isOpened = tableDataView.isTableOpened(dbTable.getTableName());
+		if(isOpened) {
+			tableDataView.selectTable(dbTable.getTableName());
+			return;
+		}
+		
+		//获取标签容器：
 		CTabFolder folder = ((TableData)AppContext.getView(AppConsts.TABLE_DATA_UI)).getTabFolder();
 		//创建新的ViewTable，并在其中加载DBTable对应的数据
 		Composite composite = DataTableFactory.createDataTableControl(dbTable, folder);

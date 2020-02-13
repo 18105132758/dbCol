@@ -91,7 +91,7 @@ public class TableList extends ViewPart {
 		tableViewer.addDoubleClickListener(new TableDoubleClickListenser());
 		//单击、复选框选中监听
 		tableViewer.addSelectionChangedListener(
-				(event)->System.out.println("click..........."));
+				(event)->System.out.println("single click..........."));
 	}
 	
 }
