@@ -11,13 +11,14 @@ import dbcol.app.database.exceptions.BusinessException;
  */
 public enum DBType {
 	
-	MYSQL("mysql"), ORACLE("oracle"), SQLSERVER("sqlServer");
+	MYSQL("mysql", "com.mysql.cj.jdbc.Driver"), ORACLE("oracle", null), SQLSERVER("sqlServer", null);
 	
 	private final String value;
+	private final String driverClass;
 	
-	
-	private DBType(String value) {
+	private DBType(String value, String driverClass) {
 		this.value = value;
+		this.driverClass = driverClass;
 	}
 
 
@@ -25,6 +26,12 @@ public enum DBType {
 	public String toString() {
 		return value;
 	}
+
+	
+	public String getDriverClass() {
+		return driverClass;
+	}
+
 
 	/**
 	 * 将字符串转换成枚举类型

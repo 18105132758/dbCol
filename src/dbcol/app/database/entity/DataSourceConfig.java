@@ -1,5 +1,7 @@
 package dbcol.app.database.entity;
 
+import org.apache.commons.lang3.StringUtils;
+
 import dbcol.app.database.enums.DBType;
 
 /**
@@ -89,4 +91,20 @@ public class DataSourceConfig {
 		this.dsName = dsName;
 	}
 	
+	/**
+	 * 连接元素，生产URL
+	 * @return
+	 */
+	public String jointJdbcURL() {
+		if(StringUtils.isNotBlank(jdbcURL)) {
+			return jdbcURL;
+		}
+		StringBuilder url = new StringBuilder("jdbc:mysql://")
+				.append(host).append(":").append(port).append("/")
+				.append(dbName)
+				.append("?useSSL=false&serverTimezone=UTC");
+		return url.toString();
+//		jdbc:mysql://127.0.0.1:3306/zyj?useSSL=false&serverTimezone=UTC;
+		
+	}
 }

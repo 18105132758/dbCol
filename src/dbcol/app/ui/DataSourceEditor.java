@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Text;
 import dbcol.app.database.conn.DBConnector;
 import dbcol.app.database.entity.DataSourceConfig;
 import dbcol.app.database.enums.DBType;
+import dbcol.app.database.exceptions.BusinessException;
 
 public class DataSourceEditor extends Dialog{
 
@@ -113,9 +114,13 @@ public class DataSourceEditor extends Dialog{
 					return;
 				}
 				DataSourceConfig dsCfg = extractParams();
-				boolean result = DBConnector.connTest(dsCfg);
-				if(result) {
-					infoLabel.setText("连接成功!");
+				try {
+					boolean result = DBConnector.connTest(dsCfg);
+					if(result) {
+						infoLabel.setText("连接成功!");
+					}
+				} catch (BusinessException be) {
+					infoLabel.setText("连接失败：" + be.getMessage());
 				}
 			}
 
@@ -194,7 +199,7 @@ public class DataSourceEditor extends Dialog{
 	 * 进行保存时设置参数
 	 * @return
 	 */
-	private boolean saveParamsCheck() {
+	private boolean paramsCheckForSaving() {
 		String dsName = this.dsNameText.getText();
 		if(StringUtils.isBlank(dsName)) {
 			this.infoLabel.setText("请输入用户名");
