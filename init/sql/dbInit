@@ -1,0 +1,10 @@
+create table DATA_SOURCE_CONFIG(
+	ds_name varchar(500) primary key not null,
+	jdbc_url varchar(250),
+	host varchar(50),
+	port int,
+	db_name varchar(200),
+	user_name varchar(200),
+	password varchar(200),
+	db_type varchar(50)
+);

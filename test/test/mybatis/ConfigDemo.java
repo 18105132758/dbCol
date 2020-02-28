@@ -5,8 +5,9 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
+import dbcol.app.database.entity.DBTable;
+import dbcol.app.database.mapper.tableList.MysqlTableMapper;
 import dbcol.app.database.mybatis.SqlSessionFactoryInitor;
-import dbcol.app.database.tableList.mapper.MysqlTableMapper;
 import test.mybatis.data.entity.Author;
 import test.mybatis.data.mapper.AuthorMapper;
 
@@ -17,8 +18,8 @@ public class ConfigDemo {
 		SqlSession session = factory.openSession();
 		
 		MysqlTableMapper tableMapper = session.getMapper(MysqlTableMapper.class);
-		List<String> tables = tableMapper.selectTableList("zyj");
-		System.out.println(String.join(",", tables));
+		List<DBTable> tables = tableMapper.selectTableList("zyj");
+//		System.out.println(String.join(",", tables));
 		
 		authorMapperTest(session);
 	}

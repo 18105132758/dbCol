@@ -2,14 +2,14 @@ package test.mybatis;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import dbcol.app.database.tableList.mapper.MysqlTableMapper;
+import dbcol.app.database.entity.DataSourceConfig;
+import dbcol.app.database.mapper.dbCollection.DataSourceConfigMapper;
 import test.mybatis.data.entity.Author;
 import test.mybatis.data.mapper.AuthorMapper;
 import test.mybatis.data.mapper.BlogMapper;
@@ -20,7 +20,7 @@ public class XMLDemo {
 	public static void main(String[] args) {
 		
 		
-		String resource = "myconfig/mybatis-config.xml";
+		String resource = "myconfig/mybatis-config-sqlite.xml";
 		InputStream inputStream;
 		try {
 			inputStream = Resources.getResourceAsStream(resource);
@@ -30,12 +30,23 @@ public class XMLDemo {
 			
 //			blogMapperTest(session);
 			
-			authorMapperTest(session);
+//			authorMapperTest(session);
 			
-			MysqlTableMapper tableMapper = session.getMapper(MysqlTableMapper.class);
-			List<String> tables = tableMapper.selectTableList("zyj");
-			System.out.println(String.join(",", tables));
+//			MysqlTableMapper tableMapper = session.getMapper(MysqlTableMapper.class);
+//			List<String> tables = tableMapper.selectTableList("zyj");
+//			System.out.println(String.join(",", tables));
 			
+			DataSourceConfigMapper dsConfigMapper = session.getMapper(DataSourceConfigMapper.class);
+			DataSourceConfig dsc = dsConfigMapper.selectByDsName("a");
+			System.out.println(dsc);
+			
+			int i = dsConfigMapper.saveLine(TestResource.mysqlDS);
+			System.out.println(i);
+//			
+			session.commit();
+			
+//			System.out.println(DBType.MYSQL.name());
+//			System.out.println(	DBType.valueOf("MYSQL1"));
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>   
+<!DOCTYPE mapper   
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"  
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd"> 
+
+<mapper namespace="dbcol.app.database.mapper.tableList.MysqlTableMapper">
+
+	<resultMap type="dbcol.app.database.entity.DBTable" id="DBTable">
+		<result javaType="string" column="TABLE_NAME" property="tableName"/>
+		<collection property="columnNames" ofType="string" javaType="list" >
+			<result column="COLUMN_NAME"/>
+		</collection>
+	</resultMap>
+
+
+<!-- 	<parameterMap type="dbcol.app.database.entity.DataSourceConfig" id="DataSourceConfigParameterMap">
+		<parameter property="dsName" resultMap="DataSourceConfigResultMap"/>
+	</parameterMap> -->
+
+	<select id="selectDBTableByName" resultMap="DBTable">
+		select t.TABLE_NAME TABLE_NAME, c.COLUMN_NAME COLUMN_NAME from information_schema.tables t 
+			left join INFORMATION_SCHEMA.columns c on t.TABLE_NAME = c.TABLE_NAME 
+		where t.TABLE_NAME = #{tableName} and c.TABLE_SCHEMA = #{dbName}  and t.table_type='BASE TABLE' 
+	</select>
+<!-- 		SELECT table_name from information_schema.tables where table_schema=#{dbName} and table_type='BASE TABLE' 
+		and table_name=#{tableName} -->
+	
+	<select id="selectColumnsByTableName" resultType="string">
+		SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS 
+		WHERE TABLE_NAME = #{tableName} AND TABLE_SCHEMA = #{dbName}
+	</select>
+	
+	
+	<select id="selectTableData" resultType="map">
+		SELECT 
+			<foreach item="column" collection="columns" separator=",">
+		   	 	${column}
+		  	</foreach>
+		FROM ${tableName}
+	</select>
+</mapper>

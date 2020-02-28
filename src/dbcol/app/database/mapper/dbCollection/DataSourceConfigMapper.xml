@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>   
+<!DOCTYPE mapper   
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"  
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd"> 
+
+<mapper namespace="dbcol.app.database.mapper.dbCollection.DataSourceConfigMapper">
+
+	<resultMap type="dbcol.app.database.entity.DataSourceConfig" id="DataSourceConfigResultMap">
+		<id javaType="java.lang.String" column="ds_name" property="dsName" />
+		<result javaType="java.lang.String" column="jdbc_url" property="jdbcURL"/>
+		<result javaType="java.lang.String" column="host" property="host"/>
+		<result javaType="int" column="port" property="port"/>
+		<result javaType="java.lang.String" column="db_name" property="dbName"/>
+		<result javaType="java.lang.String" column="user_name" property="userName"/>
+		<result javaType="java.lang.String" column="password" property="password"/>
+		<result javaType="dbcol.app.database.enums.DBType" column="db_type" property="dbType"/>
+	</resultMap>
+
+	<parameterMap type="dbcol.app.database.entity.DataSourceConfig" id="DataSourceConfigParameterMap">
+		<parameter property="dsName" resultMap="DataSourceConfigResultMap"/>
+		<parameter property="jdbcURL" resultMap="DataSourceConfigResultMap"/>
+		<parameter property="host" resultMap="DataSourceConfigResultMap"/>
+		<parameter property="port" resultMap="DataSourceConfigResultMap"/>
+		<parameter property="dbName" resultMap="DataSourceConfigResultMap"/>
+		<parameter property="userName" resultMap="DataSourceConfigResultMap"/>
+		<parameter property="password" resultMap="DataSourceConfigResultMap"/>
+		<parameter property="dbType" resultMap="DataSourceConfigResultMap"/>
+	</parameterMap>
+
+	<select id="selectByDsName" resultMap="DataSourceConfigResultMap">
+		select * from DATA_SOURCE_CONFIG
+		<if test="dsName != null">
+			where ds_name = #{dsName}
+		</if>
+	</select>
+	
+	<select id="selectAllDsCfg" resultMap="DataSourceConfigResultMap">
+		select * from DATA_SOURCE_CONFIG
+	</select>
+
+	<insert id="saveLine" keyProperty="dsName" parameterType="dbcol.app.database.entity.DataSourceConfig"
+	 parameterMap="DataSourceConfigParameterMap">
+		INSERT INTO DATA_SOURCE_CONFIG(ds_name, jdbc_url, host, port, db_name, user_name, password, db_type)
+		VALUES(#{dsName}, #{jdbcURL}, #{host}, #{port}, #{dbName}, #{userName}, #{password}, #{dbType})
+	</insert>
+	
+	<select id="selectDsNames" resultType="java.lang.String">
+		SELECT ds_name FROM DATA_SOURCE_CONFIG
+	</select>
+</mapper>

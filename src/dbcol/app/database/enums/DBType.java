@@ -1,8 +1,6 @@
 package dbcol.app.database.enums;
 
-import org.apache.commons.lang3.StringUtils;
-
-import dbcol.app.database.exceptions.BusinessException;
+import dbcol.app.database.mapper.tableList.MysqlTableMapper;
 
 /**
  * 数据库类型枚举类
@@ -11,20 +9,32 @@ import dbcol.app.database.exceptions.BusinessException;
  */
 public enum DBType {
 	
-	MYSQL("mysql", "com.mysql.cj.jdbc.Driver"), ORACLE("oracle", null), SQLSERVER("sqlServer", null);
+	MYSQL("com.mysql.cj.jdbc.Driver", MysqlTableMapper.class), ORACLE(null, null), SQLSERVER(null, null);
 	
-	private final String value;
+	
 	private final String driverClass;
 	
-	private DBType(String value, String driverClass) {
-		this.value = value;
+	private Class mapperClass;
+	
+	private static String[] nameArr;
+	static {
+		nameArr = new String[DBType.values().length];
+		int i = 0;
+		for(DBType dbType : DBType.values()) {
+			nameArr[i++] = dbType.name();
+		}
+	}
+	
+	
+	private DBType(String driverClass, Class mapperClass) {
 		this.driverClass = driverClass;
+		this.mapperClass = mapperClass;
 	}
 
 
 	@Override
 	public String toString() {
-		return value;
+		return this.name();
 	}
 
 	
@@ -32,6 +42,10 @@ public enum DBType {
 		return driverClass;
 	}
 
+	public Class getMapperClass() {
+		return this.mapperClass;
+	}
+	
 
 	/**
 	 * 将字符串转换成枚举类型
@@ -39,19 +53,9 @@ public enum DBType {
 	 * @return
 	 */
 	public static DBType convert(String dbTypeStr) {
-		if(StringUtils.isBlank(dbTypeStr)) {
-			throw new BusinessException("param \"database type\" is blank: " + dbTypeStr);
-		}
-		switch (dbTypeStr) {
-		case "mysql":
-			return MYSQL;
-		case "oracle":
-			return ORACLE;
-		case "sqlServer":
-			return SQLSERVER;
-		default:
-			throw new BusinessException("error database type: " + dbTypeStr);
-		}
+		return DBType.valueOf(dbTypeStr);
+//		throw new BusinessException("param \"database type\" is blank: " + dbTypeStr);
+//		throw new BusinessException("error database type: " + dbTypeStr);
 	}
 	
 	/**
@@ -61,11 +65,14 @@ public enum DBType {
 	 */
 	public static boolean isValidType(String dbTypeStr) {
 		try {
-			convert(dbTypeStr);
+			DBType.valueOf(dbTypeStr);
 			return true;
 		} catch (Exception e) {
 			return false;
 		}
 	}
 	
+	public static String[] getElementsNameArr() {
+		return nameArr;
+	}
 }

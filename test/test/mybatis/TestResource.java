@@ -9,6 +9,7 @@ public class TestResource {
 	
 	static {
 		mysqlDS = new DataSourceConfig();
+		mysqlDS.setDsName("测试数据源");
 		mysqlDS.setDbType(DBType.MYSQL);
 		mysqlDS.setDbName("zyj");
 		mysqlDS.setHost("127.0.0.1");

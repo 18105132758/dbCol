@@ -9,7 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dbcol.app.database.entity.DBTable;
-
+/**
+ * 辅助开发使用，后续删除
+ * @author zyj
+ *
+ */
 public class DataFactory {
 	
 	public static List<DBTable> getTableList(){

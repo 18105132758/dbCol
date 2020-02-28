@@ -1,5 +1,7 @@
 package dbcol.app.ui;
 
+import java.util.List;
+
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
@@ -10,7 +12,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.ViewPart;
 
-import dbcol.app.database.tableList.DataFactory;
+import dbcol.app.database.entity.DBTable;
 import dbcol.app.database.tableList.TableDoubleClickListenser;
 import dbcol.app.database.tableList.TableListActionGroup;
 import dbcol.app.database.tableList.TableListContentProvider;
@@ -58,11 +60,11 @@ public class TableList extends ViewPart {
 		tableViewer.setLabelProvider(new TableListLabelProvider());
 		
 		//设置表格数据
-		tableViewer.setInput(DataFactory.getTableList());
+//		tableViewer.setInput(DataFactory.getTableList());
 		
 		
 		//选中第一条
-		table.setSelection(0);
+//		table.setSelection(0);
 		table.setFocus();		//获取焦点
 		
 		//将TableViewer注册成事件源，因为后续需要处理选中事件
@@ -94,4 +96,7 @@ public class TableList extends ViewPart {
 				(event)->System.out.println("single click..........."));
 	}
 	
+	public void refereshTableList(List<DBTable> tableList) {
+		tableViewer.setInput(tableList);
+	}
 }

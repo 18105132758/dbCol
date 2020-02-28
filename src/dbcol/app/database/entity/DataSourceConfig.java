@@ -107,4 +107,12 @@ public class DataSourceConfig {
 //		jdbc:mysql://127.0.0.1:3306/zyj?useSSL=false&serverTimezone=UTC;
 		
 	}
+
+	@Override
+	public String toString() {
+		return "DataSourceConfig [dsName=" + dsName + ", jdbcURL=" + jdbcURL + ", host=" + host + ", port=" + port
+				+ ", dbName=" + dbName + ", userName=" + userName + ", password=" + password + ", dbType=" + dbType
+				+ "]";
+	}
+	
 }

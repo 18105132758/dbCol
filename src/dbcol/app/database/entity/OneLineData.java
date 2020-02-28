@@ -32,7 +32,6 @@ public class OneLineData {
 	 */
 	public Object getColumnData(int index) {
 		if(index >= data.size()) {
-//			return null;
 			throw new IndexOutOfBoundsException("只有：" + data.size() + "列数据, 当前请求列号：" + index);
 		}
 		return data.get(index);
