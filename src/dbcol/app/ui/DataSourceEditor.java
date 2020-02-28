@@ -1,12 +1,9 @@
 package dbcol.app.ui;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -18,10 +15,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import dbcol.app.database.conn.DBConnector;
-import dbcol.app.database.entity.DataSourceConfig;
+import dbcol.app.AppContext;
 import dbcol.app.database.enums.DBType;
-import dbcol.app.database.exceptions.BusinessException;
+import dbcol.app.ui.contents.DataSourceEditorComponts;
+import dbcol.app.ui.listeners.dsEditor.DsSaveBtnListener;
+import dbcol.app.ui.listeners.dsEditor.TestConnBtnListener;
 
 public class DataSourceEditor extends Dialog{
 
@@ -35,8 +33,17 @@ public class DataSourceEditor extends Dialog{
 	private Text passwordText;
 	private Label infoLabel;
 	
+	/**
+	 * 组件
+	 */
+	private DataSourceEditorComponts uiComponents;
+	
+	private DsSaveBtnListener dsSaveBtnListener;
+	
 	public DataSourceEditor(Shell parent) {
 		super(parent);
+		uiComponents = new DataSourceEditorComponts();
+		dsSaveBtnListener = new DsSaveBtnListener(uiComponents);
 	}
 
 	@Override
@@ -56,6 +63,8 @@ public class DataSourceEditor extends Dialog{
 		
 		dsNameText = new Text(container, SWT.BORDER);
 		dsNameText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false));
+		uiComponents.setDsNameText(dsNameText);
+		
 		
 		//数据库类型 
 		Label dbTypeLabel = new Label(container, SWT.NONE);
@@ -63,8 +72,10 @@ public class DataSourceEditor extends Dialog{
 		dbTypeLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		
 		dbType = new CCombo(container, SWT.BORDER | SWT.READ_ONLY);
-		dbType.setItems(new String[] {"oracle", "mysql", "sqlserver"});
+//		dbType.setItems(new String[] {"oracle", "mysql", "sqlserver"});
+		dbType.setItems(DBType.getElementsNameArr());
 		dbType.setLayoutData(new GridData(GridData.FILL, SWT.CENTER, false, false, 1, 1));
+		uiComponents.setDbType(dbType);
 		
 		//jdbc URL： 供专业人士使用
 		Label urlLable = new Label(container, SWT.NONE);
@@ -73,6 +84,7 @@ public class DataSourceEditor extends Dialog{
 		urlText = new Text(container, SWT.BORDER);
 		//水平方向填充整个区域，垂直居中
 		urlText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
+		uiComponents.setUrlText(urlText);
 		
 		/****************普通配置组： 用于一般用户进行数据库连接配置*********************/
 		createCommonDSConfigGroup(container);
@@ -80,6 +92,7 @@ public class DataSourceEditor extends Dialog{
 		infoLabel = new Label(container, SWT.NONE);
 		infoLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 //		infoLabel.setText(" ");
+		uiComponents.setInfoLabel(infoLabel);
 		
 		return super.createDialogArea(parent);
 	}
@@ -106,32 +119,7 @@ public class DataSourceEditor extends Dialog{
 		Button cancleBtn = createButton(parent, IDialogConstants.CANCEL_ID, "取消1", true);
 //		cancleBtn.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 2, 1));
 		
-		testConnBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseUp(MouseEvent e) {
-				System.out.println("测试连接： 释放");
-				if(!connParamCheck()) {
-					return;
-				}
-				DataSourceConfig dsCfg = extractParams();
-				try {
-					boolean result = DBConnector.connTest(dsCfg);
-					if(result) {
-						infoLabel.setText("连接成功!");
-					}
-				} catch (BusinessException be) {
-					infoLabel.setText("连接失败：" + be.getMessage());
-				}
-			}
-
-			@Override
-			public void mouseDown(MouseEvent e) {
-				// TODO Auto-generated method stub
-				super.mouseDown(e);
-				System.out.println("测试连接： 按下");
-			}
-			
-		});
+		testConnBtn.addMouseListener(new TestConnBtnListener(uiComponents));
 	}
 	
 	
@@ -151,109 +139,13 @@ public class DataSourceEditor extends Dialog{
 	protected Point getInitialSize() {
 		return new Point(400, 500);
 	}
-	
-	
 
 	@Override
 	protected void okPressed() {
+		System.out.println(AppContext.getAppPath());
+		this.dsSaveBtnListener.saveDataSourceConfig();
+		System.out.println("保存数据源配置................");
 		super.okPressed();
-	}
-
-	/**
-	 * 提取参数信息
-	 * @return
-	 */
-	private DataSourceConfig extractParams() {
-		DataSourceConfig dbCfg = new DataSourceConfig();
-		
-		String dsName = this.dsNameText.getText();
-		dbCfg.setDsName(dsName);
-		
-		String dbTypeStr = this.dbType.getText();
-		DBType dbType = DBType.convert(dbTypeStr);
-		dbCfg.setDbType(dbType);
-		
-		String jdbcURL = this.urlText.getText();
-		dbCfg.setJdbcURL(jdbcURL);
-		
-		String host = this.hostText.getText();
-		dbCfg.setHost(host);
-		
-		String portStr = this.portText.getText();
-		dbCfg.setPort(Integer.parseInt(portStr));
-		
-		String dbName = this.dataBaseText.getText();
-		dbCfg.setDbName(dbName);
-		
-		String userName = this.userNameText.getText();
-		dbCfg.setUserName(userName);
-		
-		String password = this.passwordText.getText();
-		dbCfg.setPassword(password);
-		
-		return dbCfg;
-	}
-	
-	
-	/**
-	 * 进行保存时设置参数
-	 * @return
-	 */
-	private boolean paramsCheckForSaving() {
-		String dsName = this.dsNameText.getText();
-		if(StringUtils.isBlank(dsName)) {
-			this.infoLabel.setText("请输入用户名");
-			return false;
-		}
-		return connParamCheck();
-	}
-	
-	/**
-	 * 连接测试参数校验: JDBCURL和普通参数二选一进行设置，JDBCURL优先级高
-	 * @return
-	 */
-	private boolean connParamCheck() {
-		String dbTypeStr = this.dbType.getText();
-		if(!DBType.isValidType(dbTypeStr)) {
-			this.infoLabel.setText("请选择数据库类型");
-			return false;
-		}
-		
-		String jdbcURL = this.urlText.getText();
-		if(StringUtils.isNotBlank(jdbcURL)) {
-			return true;
-		}
-
-		String host = this.hostText.getText();
-		if(StringUtils.isBlank(host)) {
-			this.infoLabel.setText("请填写服务器地址");
-			return false;
-		}
-			
-		String portStr = this.portText.getText();
-		if(StringUtils.isBlank(portStr)) {
-			this.infoLabel.setText("请填写端口");
-			return false;
-		}
-		
-		
-		String dbName = this.dataBaseText.getText();
-//		if(StringUtils.isBlank(dbName)) {
-//			this.infoLabel.setText("请指定数据库名");
-//			return false;
-//		}
-		String userName = this.userNameText.getText();
-		if(StringUtils.isBlank(userName)) {
-			this.infoLabel.setText("请填写用户名");
-			return false;
-		}
-		String password = this.passwordText.getText();
-		if(StringUtils.isBlank(password)) {
-			this.infoLabel.setText("请填写密码");
-			return false;
-		}
-		
-		return true;
 	}
 	
 	/**
@@ -269,29 +161,34 @@ public class DataSourceEditor extends Dialog{
 		hostLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		hostText = new Text(commonGroup, SWT.BORDER);
 		hostText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		uiComponents.setHostText(hostText);
 		//端口
 		Label portLabel = new Label(commonGroup, SWT.NONE);
 		portLabel.setText("端口：");
 		portLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		portText = new Text(commonGroup, SWT.BORDER);
 		portText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		uiComponents.setPortText(portText);
 		//数据库
 		Label dataBaseLabel = new Label(commonGroup, SWT.NONE);
 		dataBaseLabel.setText("数据库：");
 		dataBaseLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		dataBaseText = new Text(commonGroup, SWT.BORDER);
 		dataBaseText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		uiComponents.setDataBaseText(dataBaseText);
 		//用户名
 		Label userNameLabel = new Label(commonGroup, SWT.NONE);
 		userNameLabel.setText("用户名：");
 		userNameLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		userNameText = new Text(commonGroup, SWT.BORDER);
 		userNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		uiComponents.setUserNameText(userNameText);
 		//密码
 		Label passwordLabel = new Label(commonGroup, SWT.NONE);
 		passwordLabel.setText("密码：");
 		passwordLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		passwordText = new Text(commonGroup, SWT.BORDER);
 		passwordText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		uiComponents.setPasswordText(passwordText);
 	}
 }
