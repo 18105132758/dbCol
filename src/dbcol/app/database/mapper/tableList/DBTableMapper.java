@@ -15,6 +15,9 @@ public interface DBTableMapper {
 	 */
 	List<DBTable> selectTableList(@Param("dbName") String dbName);
 	
+	List<DBTable> selectTableList2(@Param("dbName") String dbName);
+	
+	
 	/**
 	 * 查询数据表信息，主要查询表中的数据列
 	 * @param tableName	表名称

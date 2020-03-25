@@ -17,13 +17,17 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		<parameter property="dsName" resultMap="DataSourceConfigResultMap"/>
 	</parameterMap> -->
 
-	<select id="selectDBTableByName" resultMap="DBTable">
+	<select id="selectDBTableByName" resultMap="DBTable"  >
 		select t.TABLE_NAME TABLE_NAME, c.COLUMN_NAME COLUMN_NAME from information_schema.tables t 
 			left join INFORMATION_SCHEMA.columns c on t.TABLE_NAME = c.TABLE_NAME 
 		where t.TABLE_NAME = #{tableName} and c.TABLE_SCHEMA = #{dbName}  and t.table_type='BASE TABLE' 
 	</select>
-<!-- 		SELECT table_name from information_schema.tables where table_schema=#{dbName} and table_type='BASE TABLE' 
-		and table_name=#{tableName} -->
+	<!-- 查询表数据信息 -->
+	<select id="selectTableList" resultMap="DBTable" resultType="list">
+		select t.TABLE_NAME TABLE_NAME, c.COLUMN_NAME COLUMN_NAME from information_schema.tables t 
+			left join INFORMATION_SCHEMA.columns c on t.TABLE_NAME = c.TABLE_NAME 
+		where c.TABLE_SCHEMA = #{dbName}  and t.table_type='BASE TABLE' 
+	</select>
 	
 	<select id="selectColumnsByTableName" resultType="string">
 		SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS 
@@ -37,5 +41,14 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		   	 	${column}
 		  	</foreach>
 		FROM ${tableName}
+	</select>
+	
+	<select id="pageSelectTableData" resultType="map">
+		SELECT 			
+			<foreach item="column" collection="columns" separator=",">
+		   	 	${column}
+		  	</foreach>
+		FROM ${tableName}
+		LIMIT #{offset}, #{size}
 	</select>
 </mapper>

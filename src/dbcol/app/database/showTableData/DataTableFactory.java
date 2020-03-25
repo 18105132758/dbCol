@@ -68,9 +68,10 @@ public class DataTableFactory {
 	 * @param dbTableName
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	private static List<Map<String, Object>> queryData(DBTable dbTable){
-		SqlSession session = AppContext.CURR_DS_SESSION_FACTORY.openSession();
-		DBTableMapper mapper = (DBTableMapper) session.getMapper(AppContext.CURR_DS.getDbType().getMapperClass());
+		SqlSession session = AppContext.CURR_OUTER_DS_SESSION_FACTORY.openSession();
+		DBTableMapper mapper = (DBTableMapper) session.getMapper(AppContext.CURR_OUTER_DS.getDbType().getMapperClass());
 		//查询表数据
 		List<Map<String, Object>> data = mapper.selectTableData(dbTable.getTableName(), dbTable.getColumnNames());
 		return data;

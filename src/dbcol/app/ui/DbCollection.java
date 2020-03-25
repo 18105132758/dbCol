@@ -15,6 +15,7 @@ import dbcol.app.AppContext;
 import dbcol.app.database.mapper.dbCollection.DataSourceConfigMapper;
 import dbcol.app.ui.listeners.dbCollection.ConnBtnListener;
 import dbcol.app.ui.listeners.dbCollection.CreateConnBtnListener;
+import dbcol.app.ui.listeners.dbCollection.ExpBtnListener;
 import dbcol.app.ui.listeners.dbCollection.UsableDataSourceSelecteListener;
 
 public class DbCollection extends ViewPart {
@@ -32,6 +33,11 @@ public class DbCollection extends ViewPart {
 	 * 连接按钮
 	 */
 	private Button connBtn;
+	
+	/**
+	 * 导出按钮
+	 */
+	private Button expBtn;
 	
 	public DbCollection() {
 		// TODO Auto-generated constructor stub
@@ -53,7 +59,7 @@ public class DbCollection extends ViewPart {
 		usableDataSource.addSelectionListener(new SelectionAdapter() {
 		});
 		//查询可用数据源
-		String[] dsNameArr = AppContext.getMybatisMapper(DataSourceConfigMapper.class).selectDsNames();
+		String[] dsNameArr = AppContext.getAppMybatisMapper(DataSourceConfigMapper.class).selectDsNames();
 		usableDataSource.setItems(dsNameArr);
 		usableDataSource.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		usableDataSource.setSize(1000, 20);
@@ -65,7 +71,7 @@ public class DbCollection extends ViewPart {
 		createConnBtn = new Button(container, SWT.NONE);
 		createConnBtn.setText("新建连接");
 		
-		Button expBtn = new Button(container, SWT.NONE);
+		expBtn = new Button(container, SWT.NONE);
 		expBtn.setText("导出");
 		
 		registBtnEvent();
@@ -78,6 +84,7 @@ public class DbCollection extends ViewPart {
 		createConnBtn.addMouseListener(new CreateConnBtnListener());
 		usableDataSource.addSelectionListener(new UsableDataSourceSelecteListener());
 		connBtn.addMouseListener(new ConnBtnListener(usableDataSource));
+		expBtn.addMouseListener(new ExpBtnListener());
 	}
 	
 

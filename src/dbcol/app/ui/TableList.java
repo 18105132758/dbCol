@@ -1,5 +1,6 @@
 package dbcol.app.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.action.MenuManager;
@@ -10,13 +11,15 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.part.ViewPart;
 
 import dbcol.app.database.entity.DBTable;
-import dbcol.app.database.tableList.TableDoubleClickListenser;
 import dbcol.app.database.tableList.TableListActionGroup;
 import dbcol.app.database.tableList.TableListContentProvider;
 import dbcol.app.database.tableList.TableListLabelProvider;
+import dbcol.app.ui.listeners.tableList.TableDoubleClickListenser;
+import dbcol.app.ui.listeners.tableList.TableSelectedListener;
 
 public class TableList extends ViewPart {
 	private Table table;
@@ -90,13 +93,28 @@ public class TableList extends ViewPart {
 	 */
 	private void addListeners() {
 		//双击事件监听
-		tableViewer.addDoubleClickListener(new TableDoubleClickListenser());
 		//单击、复选框选中监听
-		tableViewer.addSelectionChangedListener(
-				(event)->System.out.println("single click..........."));
+		tableViewer.addDoubleClickListener(new TableDoubleClickListenser());
+		tableViewer.addSelectionChangedListener(new TableSelectedListener());
 	}
 	
 	public void refereshTableList(List<DBTable> tableList) {
 		tableViewer.setInput(tableList);
+	}
+
+	public TableViewer getTableViewer() {
+		return tableViewer;
+	}
+	
+	public List<DBTable> getCheckedTables(){
+		Table table = tableViewer.getTable();
+		TableItem[] items = table.getItems();
+		List<DBTable> selectedTables = new ArrayList<DBTable>();
+		for (TableItem item : items) {
+			if(item.getChecked()) {
+				selectedTables.add((DBTable) item.getData());
+			}
+		}
+		return selectedTables;
 	}
 }
